@@ -7,36 +7,16 @@
     <title>首页</title>
 </head>
 <body>
-
-<div id="chapter">
-    <button class="btn" data-action="start">同步章节列表</button>
-    <button class="btn" data-action="stop">停止</button>
-</div>
-
 <div id="content">
+    <button class="btnUpdate" data-action="start">更新章节内容</button>
     <button class="btnCon" data-action="start">同步章节内容</button>
     <button class="btnCon" data-action="stop">停止</button>
 </div>
-
-<div id="cover">
-    <button class="btnCover" data-action="start">获取图片</button>
-    <button class="btnCover" data-action="stop">停止</button>
-</div>
-
 </body>
 </html>
-<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+<script src="__PUBLIC__/js/jquery.min.js"></script>
 <script>
     $(function () {
-        $('.btn').on('click', function () {
-            var action = $(this).data('action');
-            if (action == 'start') {
-                ChapterList();
-            } else {
-                window.location.reload();
-            }
-        });
-
         $('.btnCon').on('click', function () {
             var action = $(this).data('action');
             if (action == 'start') {
@@ -46,38 +26,28 @@
             }
         });
 
-        $('.btnCover').on('click', function () {
+        $('.btnUpdate').on('click', function () {
             var action = $(this).data('action');
             if (action == 'start') {
-                CoverList();
+                update();
             } else {
                 window.location.reload();
             }
         });
 
-        function ChapterList() {
-            $.post('http://127.0.0.1:82/Home/novel/getNovelChapterList', {action: 'start'}, function (res) {
-                if (res) {
-                    console.log(res);
-                    setTimeout(ChapterList, 300);
-                }
-            })
-        }
-
         function ContentList() {
-            $.post('http://127.0.0.1:82/Home/novel/getChapterContent', {action: 'start'}, function (res) {
-                if (res) {
-                    console.log(res);
-                    setTimeout(ContentList, 300);
-                }
+            var getUrl = 'http://127.0.0.1:81/index.php?s=/Home/Novel/getChapterContent';
+            $.get(getUrl,function (res) {
+                setTimeout(ContentList, 500);
             })
         }
 
-        function CoverList() {
-            $.post('http://127.0.0.1:82/Home/novel/getCover', {action: 'start'}, function (res) {
-                if (res) {
-                    console.log(res);
-                    setTimeout(CoverList, 200);
+        function update() {
+            var updateUrl = 'http://127.0.0.1:81/index.php?s=/Home/Novel/getContent';
+            $.get(updateUrl,function (res) {
+                console.log(res);
+                if (res.code){
+                    setTimeout(update, 500);
                 }
             })
         }
